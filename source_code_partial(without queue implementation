@@ -1,0 +1,88 @@
+#include <stdio.h> 
+ #include <string.h> 
+ #include <stdlib.h> 
+ #include <GLUT/glut.h> 
+ #include <ctype.h> 
+ #include <time.h> 
+ #include "myheader.h" 
+  
+  
+ //1st function 
+ // initialize the values requried 
+ void myinit() { 
+ 
+         glClearColor(BACKGROUND_R, BACKGROUND_G, BACKGROUND_B, BACKGROUND_A); 
+         glMatrixMode(GL_MODELVIEW); 
+         glLoadIdentity(); 
+         glMatrixMode(GL_PROJECTION); 
+         gluOrtho2D(0.0,SCREEN_X,0.0,SCREEN_Y); 
+  
+         int i; 
+         for(i = 0; i < 15; i++) { 
+                 queue[i].r = 0; 
+                 queue[i].g = 0.25; 
+                 queue[i].b = 0.75; 
+                 queue[i].rl = 1; 
+                 queue[i].gl = 0; 
+                 queue[i].bl = 0; 
+         } 
+  
+         float step = DIST/MAX; 
+         queue[0].x1 = OFFSET_X; 
+         queue[0].x2 = queue[0].x1+step; 
+  
+         for(i = 1; i <= 15; i++) { 
+                 queue[i].x1 = queue[i-1].x1+step; 
+                 queue[i].x2 = queue[i].x1+step; 
+         } 
+  
+ } 
+  
+  
+ void square(int x1, int y1, int x2, int y2) { 
+         glBegin(GL_POLYGON); 
+                 glVertex2f(x1, y1); 
+                 glVertex2f(x1, y2); 
+                 glVertex2f(x2, y2); 
+                 glVertex2f(x2, y1); 
+         glEnd(); 
+ }
+
+ void drawOutline(int x1, int y1, int x2, int y2) { 
+         int temp; 
+         if(x1 < x2) { 
+                 temp = x1; 
+                 x1 = x2; 
+                 x2 = temp; 
+         } 
+         if(y1 < y2) { 
+                 temp = y1; 
+                 y1 = y2; 
+                 y2 = temp; 
+         } 
+         glBegin(GL_LINES); 
+                 glVertex2f(x1, y1); 
+                 glVertex2f(x1, y2); 
+                 glVertex2f(x2, y2); 
+                 glVertex2f(x2, y1); 
+         glEnd(); 
+ }
+                 
+
+int  main(int argc,char **argv) { 
+         char number[1000]; 
+         int i, j, len; 
+         char c; 
+         strcpy(enter_str, "Enter Element to Queue: "); 
+         start_of_num = strlen("Enter Element to Queue: ");
+        glutInit(&argc,argv); 
+         glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB); 
+         glutInitWindowSize(SCREEN_X,SCREEN_Y); 
+         glutInitWindowPosition(10,10); 
+         glutCreateWindow("double ended Queue Simulation"); 
+         glutDisplayFunc(display); 
+         glutKeyboardFunc(mykey); 
+         myinit(); 
+         glutMainLoop(); 
+         return 0; 
+ }
